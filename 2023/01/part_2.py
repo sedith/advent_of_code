@@ -5,7 +5,7 @@ if __name__ == '__main__':
     tic = time.time()
 
     with open('input.txt', 'r') as f:
-        instructions = f.readlines()
+        instructions = f.read().splitlines()
 
     sum = 0
     for line in instructions:
