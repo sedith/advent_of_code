@@ -5,13 +5,13 @@ if __name__ == '__main__':
     tic = time.time()
 
     with open('input.txt', 'r') as f:
-        games = f.readlines()
+        games = f.read().splitlines()
 
     sum_powers = 0
     for game in games:
         game_ID, game_content = game.split(': ')
         game_ID = int(game_ID[5:])
-        sets = game_content[:-1].split('; ')
+        sets = game_content.split('; ')
         mins = {'red': 0, 'green': 0, 'blue': 0}
         for set in sets:
             subsets = set.split(', ')

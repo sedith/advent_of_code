@@ -7,13 +7,13 @@ if __name__ == '__main__':
     tic = time.time()
 
     with open('input.txt', 'r') as f:
-        games = f.readlines()
+        games = f.read().splitlines()
 
     sum_IDs = 0
     for game in games:
         game_ID, game_content = game.split(': ')
         game_ID = int(game_ID[5:])
-        sets = game_content[:-1].split('; ')
+        sets = game_content.split('; ')
         valid = True
         for set in sets:
             subsets = set.split(', ')
