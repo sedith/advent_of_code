@@ -26,4 +26,4 @@ Almost the same solution as part 1.
 The value of `'J'` in `HEAD_VALUES` is set to `0` for simplicity, instead of shifting all the digits up.
 To not modify too much my previous solution, I first count and remove the Js from the hand, then compute the type as before.
 Then, in a second step, the type is incremented according to the number of Js.
-(Yes, another ugly if switch.)
+(Yes, another ugly if-switch.)

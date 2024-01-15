@@ -49,7 +49,7 @@ def hand_to_id(hand):
 if __name__ == '__main__':
     tic = time.time()
 
-    with open('example.txt', 'r') as f:
+    with open('input.txt', 'r') as f:
         inputs = f.read().splitlines()
 
     hands, bids = zip(*[line.split() for line in inputs])
