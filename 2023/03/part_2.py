@@ -21,7 +21,6 @@ if __name__ == '__main__':
     digits = ''
     gear = None
     for i, line in enumerate(schematic):
-        j = 0
         for j, cell in enumerate(line):
             if cell.isdigit():
                 digits += cell
