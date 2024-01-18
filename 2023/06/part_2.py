@@ -22,7 +22,7 @@ if __name__ == '__main__':
 
     T, D = int(sheet[0].split(':')[1]), int(sheet[1].split(':')[1])
 
-    ## solve - x**2 + x*T -d = 0
+    ## solve - x**2 + x*T - D = 0
     sols = solve_quadratic_eq(-1, T, -D)
 
     ways_to_beat = int(np.floor(sols[1]) - np.ceil(sols[0]) + 1)

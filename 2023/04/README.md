@@ -5,7 +5,7 @@
 Scratching the cards is made in the most straightforward fashion:
 * split the string in two lists ('winning numbers' and 'your number')
 * for each of your number, count the ones which are winning ones
-* compute the value as `2**(nb_win-1)`, making sure to avoid having `**(-1)` if `nb_win == 0`
+* compute the value as `2**(nb_win-1)`, making sure to avoid having `**(-1)` if `nb_win == 0`.
 
 ## Part 2
 

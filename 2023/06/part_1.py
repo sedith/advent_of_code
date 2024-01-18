@@ -18,6 +18,8 @@ if __name__ == '__main__':
             V = press_T
             if V * (T - press_T) > D:
                 ways_to_beat += 1
+            elif ways_to_beat > 0:
+                break
         solution *= ways_to_beat
 
     toc = time.time()
