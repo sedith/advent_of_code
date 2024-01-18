@@ -13,9 +13,9 @@ if __name__ == '__main__':
     tic = time.time()
 
     with open('input.txt', 'r') as f:
-        schematic_text = f.readlines()
+        schematic_text = f.read().splitlines()
 
-    schematic = np.array([list(line[:-1]) for line in schematic_text])
+    schematic = np.array([list(line) for line in schematic_text])
 
     gears = {}
     digits = ''
