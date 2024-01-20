@@ -64,7 +64,6 @@ def invert_map(nb, map):
 if __name__ == '__main__':
     tic = time.time()
 
-    # with open('example.txt', 'r') as f:
     with open('input.txt', 'r') as f:
         almanac = f.read().splitlines()
 
@@ -74,7 +73,6 @@ if __name__ == '__main__':
     print('nb_seeds:', nb_seeds)
 
     max_loc = maps[-1][-1]['dst'] + maps[-1][-1]['len']
-    # print(max_loc)
 
     closest_location = None
 
@@ -86,5 +84,5 @@ if __name__ == '__main__':
         loc += step
 
     toc = time.time()
-    print('closest_location:', loc)
+    print('closest location:', loc)
     print('time:', toc-tic)

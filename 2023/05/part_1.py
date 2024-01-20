@@ -41,5 +41,5 @@ if __name__ == '__main__':
         else: closest_location = min(closest_location, s)
 
     toc = time.time()
-    print('closest_location:', closest_location)
+    print('closest location:', closest_location)
     print('time:', toc-tic)
