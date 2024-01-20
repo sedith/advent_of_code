@@ -19,3 +19,5 @@ E.g., take a step of `1000`. The first two valid seed ranges afe `200 -> 500` an
 Its working under the assumption that the mapping ranges are continuous segments (instead of sparse points), and most importantly that ranges are large enough not to miss them with a "reasonable" step.
 
 This solution seemed pretty smart when I came out with it, tho.
+
+In the end, the mapping is piecewise-affine, hence it should be sufficient to test both ends of each segments.
