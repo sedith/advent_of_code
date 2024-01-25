@@ -1,4 +1,4 @@
-# Advent of code 2023 - 13
+# Advent of code 2023 - Day 13: Point of Incidence
 
 ## Part 1
 

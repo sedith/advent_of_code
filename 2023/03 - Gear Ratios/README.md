@@ -1,4 +1,4 @@
-# Advent of code 2023 - 03
+# Advent of code 2023 - Day 3: Gear Ratios
 
 ## Part 1
 

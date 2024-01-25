@@ -1,4 +1,4 @@
-# Advent of code 2023 - 11
+# Advent of code 2023 - Day 11: Cosmic Expansion
 
 ## Part 1
 

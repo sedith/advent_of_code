@@ -1,4 +1,4 @@
-# Advent of code 2023 - 14
+# Advent of code 2023 - Day 14: Parabolic Reflector Dish
 
 ## Part 1
 

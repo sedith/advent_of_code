@@ -1,4 +1,4 @@
-# Advent of code 2023 - 09
+# Advent of code 2023 - Day 9: Mirage Maintenance
 
 ## Part 1
 

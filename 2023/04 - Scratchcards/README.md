@@ -1,4 +1,4 @@
-# Advent of code 2023 - 04
+# Advent of code 2023 - Day 4: Scratchcards
 
 ## Part 1
 

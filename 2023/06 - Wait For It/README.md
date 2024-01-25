@@ -1,4 +1,4 @@
-# Advent of code 2023 - 06
+# Advent of code 2023 - Day 6: Wait For It
 
 ## Part 1
 

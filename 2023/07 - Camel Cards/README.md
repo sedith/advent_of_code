@@ -1,4 +1,4 @@
-# Advent of code 2023 - 07
+# Advent of code 2023 - Day 7: Camel Cards
 
 ## Part 1
 

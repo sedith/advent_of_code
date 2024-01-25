@@ -1,4 +1,4 @@
-# Advent of code 2023 - 12
+# Advent of code 2023 - Day 12: Hot Springs
 
 ## Part 1
 

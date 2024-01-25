@@ -1,4 +1,4 @@
-# Advent of code 2023 - 10
+# Advent of code 2023 - Day 10: Pipe Maze
 
 ## Part 1
 

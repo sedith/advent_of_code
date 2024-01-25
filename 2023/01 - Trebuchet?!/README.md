@@ -1,4 +1,4 @@
-# Advent of code 2023 - 01
+# Advent of code 2023 - Day 01: Trebuchet?!
 
 ## Part 1
 
