@@ -81,6 +81,7 @@ if __name__ == '__main__':
             nc += conditions
         springs = ns ; conditions = nc
 
+        global memoization
         memoization = {}  # memoization dict for dynamic programming
         sum_counts += recursive_nb_valid(springs, conditions, 0, 0, 0)
 
