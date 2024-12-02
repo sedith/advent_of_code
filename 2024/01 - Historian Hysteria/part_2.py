@@ -2,8 +2,6 @@ import time
 
 
 def naive_solution(l1, l2):
-    l1 = lists[0]
-    l2 = sorted(lists[1])
     score = 0
     for n1 in l1:
         score += n1 * sum([n2 == n1 for n2 in l2])
@@ -11,8 +9,8 @@ def naive_solution(l1, l2):
 
 
 def better_solution(l1, l2):
-    l1 = sorted(lists[0])
-    l2 = sorted(lists[1])
+    l1 = sorted(l1)
+    l2 = sorted(l2)
 
     mem = {}
     score = 0
@@ -37,10 +35,10 @@ if __name__ == '__main__':
         input = f.read().splitlines()
     lists = map(lambda x: [int(n) for n in x.split()], input)
     lists = list(map(list, zip(*lists)))  # transpose
-    l1 = sorted(lists[0])
-    l2 = sorted(lists[1])
+    l1 = lists[0]
+    l2 = lists[1]
 
-    # score = naive_solution(l1, l2)  # 30ms
+    # score = naive_solution(l1, l2)  # 23ms
     score = better_solution(l1, l2)  # 1ms
 
     toc = time.time()
