@@ -2,7 +2,6 @@
 
 no="00$2"
 no="${no: -2}"
-echo ${no}
 
 folder="$1/$no - $3"
 mkdir -p "${folder}"
