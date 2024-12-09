@@ -1,6 +1,3 @@
-from collections import defaultdict
-
-
 def diskmap_to_blocks(diskmap):
     file_idx = 0
     file = True
@@ -15,7 +12,6 @@ def diskmap_to_blocks(diskmap):
 
 def defrag(blocks):
     ## locate empty blocks
-    # free = defaultdict(list)
     free_idx = []
     free_size = []
     curr_size = 0
