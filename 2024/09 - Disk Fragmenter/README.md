@@ -18,4 +18,5 @@ Careful to:
 
 Runs in ~2s. Reduced time by half by removing the fully filled slots from the free slot lists.
 Could be optimized further, eg by building the two co-lists directly from the diskmap and dropping the empty blocks `'.'`.
-But mostly one should go away from the straightforward data structure (list of blocks).
+Memoization could also work.
+But mostly one should go away from the straightforward data structure (list of blocks) for some tree-based structure.
