@@ -1,4 +1,3 @@
-import time
 from enum import Enum
 
 
@@ -63,11 +62,8 @@ class Grid:
         return ''.join(''.join(line) + '\n' for line in self.str)[:-1]
 
 
-if __name__ == '__main__':
-    tic = time.time()
-
-    with open('input.txt', 'r') as f:
-        grid = Grid(f.read().splitlines())
+def main(data):
+    grid = Grid(data)
 
     target_str = 'MAS'
     target_center = target_str[1]
@@ -86,8 +82,18 @@ if __name__ == '__main__':
             [grid.reveal(cursor + Dir(d)) for d in range(4)]
         cursor = cursor.next()
 
-    # print(grid)
+    return counter
 
+
+if __name__ == '__main__':
+    import sys
+    import time
+
+    tic = time.time()
+    file = 'input.txt' if sys.argv[1:] else 'example.txt'
+    with open(file, 'r') as f:
+        data = f.read().splitlines()
+    result = main(data)
     toc = time.time()
-    print('nb of XMAS:', counter)
-    print('time:', toc-tic)
+    print(f'result   : {result}')
+    print(f'time [s] : {toc - tic:.5f}')

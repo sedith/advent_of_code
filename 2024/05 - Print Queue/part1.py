@@ -1,4 +1,3 @@
-import time
 from collections import defaultdict
 
 
@@ -9,26 +8,33 @@ def check_update(rules, update):
                 return False
     return True
 
-if __name__ == '__main__':
-    tic = time.time()
 
-    with open('input.txt', 'r') as f:
-        input = f.read().splitlines()
-
+def main(data):
     ## build ordering dict
     rules = defaultdict(list)
-    while (rule := input.pop(0)) != '':
+    while (rule := data.pop(0)) != '':
         prev, next = rule.split('|')
         rules[next].append(prev)
 
     ## check update
     sum_of_mid = 0
-    for l in input:
+    for l in data:
         update = l.split(',')
         if check_update(rules, update):
             sum_of_mid += int(update[len(update) // 2])
 
+    return sum_of_mid
 
+
+if __name__ == '__main__':
+    import sys
+    import time
+
+    tic = time.time()
+    file = 'input.txt' if sys.argv[1:] else 'example.txt'
+    with open(file, 'r') as f:
+        data = f.read().splitlines()
+    result = main(data)
     toc = time.time()
-    print('sum of middle of valid updates:', sum_of_mid)
-    print('time:', toc-tic)
+    print(f'result   : {result}')
+    print(f'time [s] : {toc - tic:.5f}')

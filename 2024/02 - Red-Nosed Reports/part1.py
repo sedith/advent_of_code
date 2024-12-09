@@ -1,15 +1,11 @@
-import time
 import math
+
 
 sign = lambda x: math.copysign(1, x)
 
 
-if __name__ == '__main__':
-    tic = time.time()
-
-    with open('input.txt', 'r') as f:
-        input = f.read().splitlines()
-    reports = [list(map(int, report.split())) for report in input]
+def main(data):
+    reports = [list(map(int, report.split())) for report in data]
 
     safe = 0
     for report in reports:
@@ -24,6 +20,18 @@ if __name__ == '__main__':
                 break
         safe += ok
 
+    return safe
+
+
+if __name__ == '__main__':
+    import sys
+    import time
+
+    tic = time.time()
+    file = 'input.txt' if sys.argv[1:] else 'example.txt'
+    with open(file, 'r') as f:
+        data = f.read().splitlines()
+    result = main(data)
     toc = time.time()
-    print('nb of safe reports:', safe)
-    print('time:', toc-tic)
+    print(f'result   : {result}')
+    print(f'time [s] : {toc - tic:.5f}')

@@ -2,7 +2,7 @@
 
 ## Part 1
 
-Simple impletation based on the grid/idx/dir implemented for *2024/04*.
+Simple impletation based on the grid/idx/dir implemented for 2024/04.
 Increment the guard position until they leave the map.
 
 ## Part 2
@@ -19,3 +19,8 @@ Implementation of path as a dict whose key is the position and value is the list
 The virtual path exploration also creates its own path dict.
 For efficiency, the dict stores only path nodes, ie when there is a change of direction. This avoid building sparser dicts, since the explore function checks appartenance to the lists at each step.
 The full path is stored in a separate list to check that the obstructions.
+
+
+## Part 2 v2
+
+Found an efficient implementation of the proper graph problem, see https://github.com/APMorto/aoc2024/blob/master/day_06_guard_gallivant/guard.py

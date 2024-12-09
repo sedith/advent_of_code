@@ -1,4 +1,3 @@
-import time
 import re
 
 
@@ -24,7 +23,7 @@ def re_sol(input):
             elif do:
                 n1, n2 = match_str[4:-1].split(',')
                 sum_mult += int(n1) * int(n2)
-            line = line[match.start() + len(match_str):]
+            line = line[match.start() + len(match_str) :]
     return sum_mult
 
 
@@ -82,16 +81,20 @@ def manual_sol(input):
     return sum_mult
 
 
+def main(data):
+    return re_sol(data)
+    # return manual_sol(data)
+
 
 if __name__ == '__main__':
+    import sys
+    import time
+
     tic = time.time()
-
-    with open('input.txt', 'r') as f:
-        input = f.read().splitlines()
-
-    sum_mult = re_sol(input)
-    # sum_mult = manual_sol(input)
-
+    file = 'input.txt' if sys.argv[1:] else 'example.txt'
+    with open(file, 'r') as f:
+        data = f.read().splitlines()
+    result = main(data)
     toc = time.time()
-    print('sum:', sum_mult)
-    print('time:', toc-tic)
+    print(f'result   : {result}')
+    print(f'time [s] : {toc - tic:.5f}')

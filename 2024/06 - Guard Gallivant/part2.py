@@ -1,4 +1,3 @@
-import time
 from enum import Enum
 from copy import deepcopy
 from collections import defaultdict
@@ -90,12 +89,8 @@ class Grid:
     #     return ''.join(''.join(line) + '\n' for line in grid)[:-1]
 
 
-if __name__ == '__main__':
-    tic = time.time()
-
-    with open('input.txt', 'r') as f:
-        data = f.read().splitlines()
-        grid = Grid(data)
+def main(data):
+    grid = Grid(data)
 
     ## find start
     for i, l in enumerate(data):
@@ -121,6 +116,18 @@ if __name__ == '__main__':
                 grid.explore_cw_branch(guard_pos, dir)
         guard_pos = next_pos
 
+    return len(grid.obs)
+
+
+if __name__ == '__main__':
+    import sys
+    import time
+
+    tic = time.time()
+    file = 'input.txt' if sys.argv[1:] else 'example.txt'
+    with open(file, 'r') as f:
+        data = f.read().splitlines()
+    result = main(data)
     toc = time.time()
-    print('nb obstructions:', len(grid.obs))
-    print('time:', toc - tic)
+    print(f'result   : {result}')
+    print(f'time [s] : {toc - tic:.5f}')

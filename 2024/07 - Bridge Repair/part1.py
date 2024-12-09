@@ -1,6 +1,3 @@
-import time
-
-
 def _rec_check(possibilies, numbers):
     if not numbers:
         return possibilies
@@ -15,21 +12,28 @@ def _rec_check(possibilies, numbers):
     return _rec_check(possibilies, numbers[1:])
 
 
-if __name__ == '__main__':
-    tic = time.time()
-
-    with open('input.txt', 'r') as f:
-        data = f.read().splitlines()
-
+def main(data):
     sum_calib = 0
     for equation in data:
         result, numbers = equation.split(':')
         result = int(result)
-        numbers = list(map(int,numbers.split()))
+        numbers = list(map(int, numbers.split()))
 
         possibilies = _rec_check([], numbers)
         sum_calib += result * (result in possibilies)
 
+    return sum_calib
+
+
+if __name__ == '__main__':
+    import sys
+    import time
+
+    tic = time.time()
+    file = 'input.txt' if sys.argv[1:] else 'example.txt'
+    with open(file, 'r') as f:
+        data = f.read().splitlines()
+    result = main(data)
     toc = time.time()
-    print('sum of calibration results:', sum_calib)
-    print('time:', toc-tic)
+    print(f'result   : {result}')
+    print(f'time [s] : {toc - tic:.5f}')

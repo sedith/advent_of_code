@@ -1,4 +1,3 @@
-import time
 from enum import Enum
 
 
@@ -53,12 +52,8 @@ class Grid:
         return ''.join(''.join(line) + '\n' for line in self.grid)[:-1]
 
 
-if __name__ == '__main__':
-    tic = time.time()
-
-    with open('input.txt', 'r') as f:
-        data = f.read().splitlines()
-        grid = Grid(data)
+def main(data):
+    grid = Grid(data)
 
     ## find start
     for i, l in enumerate(data):
@@ -78,6 +73,18 @@ if __name__ == '__main__':
             dir = dir.next()
         guard = next_idx
 
+    return grid.nb_X
+
+
+if __name__ == '__main__':
+    import sys
+    import time
+
+    tic = time.time()
+    file = 'input.txt' if sys.argv[1:] else 'example.txt'
+    with open(file, 'r') as f:
+        data = f.read().splitlines()
+    result = main(data)
     toc = time.time()
-    print('nb distinct positions:', grid.nb_X)
-    print('time:', toc - tic)
+    print(f'result   : {result}')
+    print(f'time [s] : {toc - tic:.5f}')

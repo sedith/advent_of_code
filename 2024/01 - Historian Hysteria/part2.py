@@ -1,6 +1,3 @@
-import time
-
-
 def naive_solution(l1, l2):
     score = 0
     for n1 in l1:
@@ -28,19 +25,25 @@ def better_solution(l1, l2):
     return score
 
 
-if __name__ == '__main__':
-    tic = time.time()
-
-    with open('input.txt', 'r') as f:
-        input = f.read().splitlines()
-    lists = map(lambda x: [int(n) for n in x.split()], input)
+def main(data):
+    lists = map(lambda x: [int(n) for n in x.split()], data)
     lists = list(map(list, zip(*lists)))  # transpose
     l1 = lists[0]
     l2 = lists[1]
 
-    # score = naive_solution(l1, l2)  # 23ms
-    score = better_solution(l1, l2)  # 1ms
+    # return naive_solution(l1, l2)  # 23ms
+    return better_solution(l1, l2)  # 1ms
 
+
+if __name__ == '__main__':
+    import sys
+    import time
+
+    tic = time.time()
+    file = 'input.txt' if sys.argv[1:] else 'example.txt'
+    with open(file, 'r') as f:
+        data = f.read().splitlines()
+    result = main(data)
     toc = time.time()
-    print('similarity score:', score)
-    print('time:', toc-tic)
+    print(f'result   : {result}')
+    print(f'time [s] : {toc - tic:.5f}')
