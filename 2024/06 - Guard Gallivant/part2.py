@@ -2,8 +2,8 @@ from collections import defaultdict
 
 
 # def display(obs, pos, path, future_path, new_obs):
-#     global s
-#     to_print = [['.' for j in range(s[1])] for i in range(s[0])]
+#     global size
+#     to_print = [['.' for j in range(size[1])] for i in range(size[0])]
 #     for o in obs:
 #         to_print[int(o.imag)][int(o.real)] = '#'
 #
@@ -35,16 +35,16 @@ def explore(obs, path, p, dir):
 
 
 def in_grid(p):
-    global s
-    return 0 <= p.real < s[1] and 0 <= p.imag < s[0]
+    global size
+    return 0 <= p.imag < size[0] and 0 <= p.real < size[1]
 
 
 def main(data):
-    global s
-    s = len(data), len(data[0])
-    obs = {j + 1j * i for i, l in enumerate(data) for j, c in enumerate(l) if c == '#'}
+    global size
+    size = len(data), len(data[0])
+    obs = {j + i * 1j for i, l in enumerate(data) for j, c in enumerate(l) if c == '#'}
 
-    (p,) = (j + 1j * i for i, l in enumerate(data) for j, c in enumerate(l) if c == '^')  # find start
+    (p,) = (j + i * 1j for i, l in enumerate(data) for j, c in enumerate(l) if c == '^')  # find start
     dir = -1j  # starts facing north
 
     ## increment guard path
@@ -72,4 +72,4 @@ if __name__ == '__main__':
     result = main(data)
     toc = time.time()
     print(f'result   : {result}')
-    print(f'time [s] : {toc - tic:.5f}')
+    print(f'time [size] : {toc - tic:.5f}')

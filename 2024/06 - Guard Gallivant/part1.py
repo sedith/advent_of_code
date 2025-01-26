@@ -2,11 +2,11 @@ from collections import defaultdict
 
 
 def main(data):
-    s = len(data), len(data[0])
-    in_grid = lambda p: 0 <= p.real < s[1] and 0 <= p.imag < s[0]
-    obs = {j + 1j * i for i, l in enumerate(data) for j, c in enumerate(l) if c == '#'}
+    size = len(data), len(data[0])
+    in_grid = lambda p: 0 <= p.imag < size[0] and 0 <= p.real < size[1]
+    obs = {j + i * 1j for i, l in enumerate(data) for j, c in enumerate(l) if c == '#'}
 
-    (p,) = (j + 1j * i for i, l in enumerate(data) for j, c in enumerate(l) if c == '^')  # find start
+    (p,) = (j + i * 1j for i, l in enumerate(data) for j, c in enumerate(l) if c == '^')  # find start
     dir = -1j  # starts facing north
 
     ## increment guard path
