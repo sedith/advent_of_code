@@ -14,45 +14,52 @@ def bnb_min_sum(A: list[list[int]], b: list[int]) -> int:
 
     ## for each x_j, store in which rows it appears in
     col_rows = [[i for i, row in enumerate(A) if row[j]] for j in range(n)]
+    nb_const = [len(cr) for cr in col_rows]
     # for each row i, store which x_j appears in it
     row_cols = [[j for j, v in enumerate(row) if v] for row in A]
+    # max_possible [0 for ]
 
     optimal_cost = float("inf")
     unassigned = [True] * n
-    left = n
 
-    def dfs(j: int, residual: list[int], cost: int) -> None:
+    def dfs(residual: list[int], cost: int, left: int) -> None:
         nonlocal optimal_cost
 
         ## if leaf node, update optimal cost iff the solution is valid (residual = 0)
-        if j == n:
+        if not left:
             if all(r == 0 for r in residual):
                 optimal_cost = min(optimal_cost, cost)
             return
 
-        ## upper bound for x[j] as min residual over rows where it appears
-        ub_j = min(residual[i] for i in col_rows[j]) if col_rows[j] else 0
-
-        ## row-feasibility interval pruning: upper bound ub_k for each unassigned variable k >= j
-        ub_k = [0] * n
-        for k in range(j, n):
+        ## in the same for-loop:
+        ## cpt upper bounds for unassigned vars
+        ## pick unassigned variable with smallest ub, tie-break by most constraints
+        ub = [0] * n
+        j = None
+        best_key = None
+        for k in range(n):
+            if not unassigned[k]:
+                continue
+            ## upper bound
             if col_rows[k]:
-                ub_k[k] = min(residual[i] for i in col_rows[k])
-
-        ## for each row i, residual must be <= sum of ub_k over unassigned vars in that row
+                ub[k] = min(residual[i] for i in col_rows[k])
+            ## best next variable
+            key = (ub[k], -nb_const[k])
+            if best_key is None or key < best_key:
+                best_key = key
+                j = k
+                
+        ## row feasibility: residual[i] must be reachable using unassigned variables
         for i in range(m):
-            max_possible = 0
-            for k in row_cols[i]:
-                if k >= j:
-                    max_possible += ub_k[k]
-            if residual[i] > max_possible:
+            if residual[i] > sum(ub[k] for k in row_cols[i] if unassigned[k]):
                 return
 
         ## explore branch
-        for val in range(0, ub_j + 1):
+        unassigned[j] = False
+        for val in range(0, ub[j] + 1):
             ## skip node if worst than current best
             if cost + val >= optimal_cost:
-                continue
+                break
 
             new_res = residual[:]  # copy prevents branches interfering with each other
             for i in col_rows[j]:
@@ -60,9 +67,10 @@ def bnb_min_sum(A: list[list[int]], b: list[int]) -> int:
                     break
                 new_res[i] = r
             else:
-                dfs(j + 1, new_res, cost + val)
+                dfs(new_res, cost + val, left - 1)
+        unassigned[j] = True
 
-    dfs(0, b[:], 0)
+    dfs(b[:], 0, n)
     return optimal_cost
 
 
