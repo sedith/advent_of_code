@@ -21,3 +21,18 @@ This is solved efficiently with DP (since the number of bits for the integers is
 The parsing of the string into target and operands is ugly, tho.
 
 ## Part 2
+
+This time, each line translates to a system of integer linear equations.  
+Eg, the first line of the example gives:
+```
+[ 0 0 0 0 1 1 ] [x_0]   [3]
+[ 0 1 0 0 0 1 ] [x_1] = [5]
+[ 0 0 1 1 1 0 ] [x_2]   [4]
+[ 1 1 0 1 0 0 ] [x_3]   [7]
+                [x_4]
+                [x_5]
+```
+where `x_i \in N` is the number of clicks on the i-th button.
+
+So, I read about [Integer Programming](https://en.wikipedia.org/wiki/Integer_programming) since I had no recollection of how to solve these.
+
