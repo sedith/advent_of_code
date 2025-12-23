@@ -1,8 +1,157 @@
+from math import inf, floor, ceil
+
+
+EPS = 1e-9
+
+def simplex(Ab, c):
+    """
+    simplex solver for LP:
+        min c^T x
+        st. A x <= b
+            x >= 0
+    Ab: list of constraints [a1..an b], ai in {-1, 0, 1}
+    c: cost vector
+    returns (opt, x) or (-inf, None)
+    """
+    ## tableau pivoting
+    def pivot(r, c):
+        k = 1 / D[r][c]
+        for i in range(m + 2):
+            if i == r:
+                continue
+            for j in range(n + 2):
+                if j != c:
+                    D[i][j] -= D[r][j] * D[i][c] * k
+        for j in range(n + 2):
+            D[r][j] *= k
+        for i in range(m + 2):
+            D[i][c] *= -k
+        D[r][c] = k
+        B[r], N[c] = N[c], B[r]
+
+    ## simplex iteration until optimal or unbounded
+    def find(p):
+        while True:
+            if D[m+p][c := min((i for i in range(n + 1) if p or N[i] != -1), key=lambda x: (D[m+p][x], N[x]))] > -EPS: return 1
+            if (r := min((i for i in range(m) if D[i][c] > EPS), key=lambda x: (D[x][-1]/D[x][c], B[x]), default=-1)) == -1: return 0
+            pivot(r, c)
+
+    m = len(Ab); n = len(Ab[0]) - 1
+
+    B = [*range(n, n + m)]  # idx basic (slack) variables
+    N = [*range(n), -1]  # idx nonbasic variables, artificial marker -1
+    D = [*([*Ab[i][:-1], -1, Ab[i][-1]] for i in range(m)), c+[0]*2, [0]*(n+2)]  # tableau (rhs last col) rows: constraints, objective, phase I
+
+    ## phase I
+    D[-1][n] = 1
+    r = min(range(m), key=lambda x: D[x][-1])  # most infeasible row
+    if D[r][-1] < -EPS:
+        pivot(r, n)
+        if not find(1) or D[-1][-1] < -EPS:
+            return -inf, None
+
+    ## if artificial variable is basic, pivot it out
+    for i in range(m):
+        if B[i] == -1:
+            pivot(i, min(range(n), key=lambda x: (D[i][x], N[x])))
+
+    ## phase II
+    if find(0):
+        x = [0]*n
+        for i in range(m):
+            if 0 <= B[i] < n:
+                x[B[i]] = D[i][-1]
+        return sum(ci * xi for ci, xi in zip(c, x)), x
+    else:
+        return -inf, None
+
+
+def bnb(A: list[list[int]], b: list[int]) -> int:
+    """
+    branch-and-bound algorithm using simplex for bounds
+    solves the ILP:
+        min c^T x
+        st. A x = b
+            x in N
+    with
+    A: list of lists (m x n), 0/1
+    b: target vector (m), nonnegative ints
+    c: cost vector (n), floats  -- not provided currently since trivial [1...1]
+    returns optimal cost (inf in infeasible)
+    """
+    m, n = len(A), len(A[0])
+    c = [1] * n  # objective: sum of x_i
+
+    optimal_cost = inf
+    def branch(node_constraints: list[list[int|float]]) -> None:
+        nonlocal optimal_cost
+
+        cost, x = simplex(node_constraints, c)
+
+        ## prune
+        if cost + EPS >= optimal_cost or cost == -inf:
+            return
+
+       ## find a fractional variable
+        for i, xi in enumerate(x):
+            if abs(xi - round(xi)) > EPS:
+                k = i
+                break
+        else:
+            ## if all integer: update optimal_cost incubent
+            optimal_cost = min(cost, optimal_cost)
+            return
+
+        ## branch x_k <= floor(x_k)
+        row_le = [0] * n + [floor(x[k])]
+        row_le[k] = 1.0
+        branch(node_constraints + [row_le])
+
+        ## branch x_k >= ceil(x_k)
+        row_ge = [0] * n + [-ceil(x[k])]
+        row_ge[k] = -1
+        branch(node_constraints + [row_ge])
+
+    ## ineq constraints Ab (for simplex)
+    constraints = []
+    for i in range(m):
+        constraints.append(A[i] + [b[i]])
+        constraints.append([-a for a in A[i]] + [-b[i]])
+
+    branch(constraints)
+    return round(optimal_cost)
+
+
+def parse_machine(line):
+    _, *b_str, j_str = line.split()
+    buttons = [list(map(int, t[1:-1].split(','))) for t in b_str]
+    b = list(map(int, j_str[1:-1].split(',')))
+    A = list(map(list, zip(*[[1 if i in btn else 0 for i in range(len(b))] for btn in buttons])))
+    return A, b
+
+
+def main(data):
+    return sum([bnb(*parse_machine(line)) for line in data])
+
+
+if __name__ == '__main__':
+    import sys
+    import time
+
+    tic = time.time()
+    file = 'input.txt' if sys.argv[1:] else 'example.txt'
+    with open(file, 'r') as f:
+        data = f.read().splitlines()
+    result = main(data)
+    toc = time.time()
+    print(f'result   : {result}')
+    print(f'time [s] : {toc - tic:.5f}')
+
+
+#####
+
 from functools import lru_cache
-from math import inf
-
-
-def bnb_min_sum(A: list[list[int]], b: list[int]) -> int:
+def bnb_arithm(A: list[list[int]], b: list[int]) -> int:
     """
     branch-and-bound algorithm
     solves the problem:
@@ -76,29 +225,3 @@ def bnb_min_sum(A: list[list[int]], b: list[int]) -> int:
         return best
 
     return branch_dfs(b, (1 << n) - 1)
-
-
-def parse_machine(line):
-    _, *b_str, j_str = line.split()
-    buttons = [tuple(map(int, t[1:-1].split(','))) for t in b_str]
-    b = tuple(map(int, j_str[1:-1].split(',')))
-    A = list(zip(*[[1 if i in btn else 0 for i in range(len(b))] for btn in buttons]))
-    return A, b
-
-
-def main(data):
-    return sum([bnb_min_sum(*parse_machine(line)) for line in data])
-
-
-if __name__ == '__main__':
-    import sys
-    import time
-
-    tic = time.time()
-    file = 'input.txt' if sys.argv[1:] else 'example.txt'
-    with open(file, 'r') as f:
-        data = f.read().splitlines()
-    result = main(data)
-    toc = time.time()
-    print(f'result   : {result}')
-    print(f'time [s] : {toc - tic:.5f}')

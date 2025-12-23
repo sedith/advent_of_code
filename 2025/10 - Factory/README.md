@@ -34,5 +34,15 @@ Eg, the first line of the example gives:
 ```
 where `x_i \in N` is the number of clicks on the i-th button.
 
-So, I read about [Integer Programming](https://en.wikipedia.org/wiki/Integer_programming) since I had no recollection of how to solve these.
+So, I read about [Integer Programming](https://en.wikipedia.org/wiki/Integer_programming) since I had no recollection of how to solve these, and I wanted to avoid using existing solvers.
 
+At first, I tried to implement a naive [branch and bounds](https://en.wikipedia.org/wiki/Branch_and_bound) by hand.  
+Basically, it recursively explores the solution tree (dfs) by setting an upper bounds on individual (unassigned) variables as the smallest residual (rhs) it contributes to.
+Branches with are unfeasible, bust the residual or are worst than current best solution as pruned.  
+Took me ages, went through several pruning optimization and I'm honestly quite happy with it. But it doesn't finish as soon as joltages (rhs) become large (eg >50).  
+I kept it as unused `bnb_arithm` in `part2.py`.
+
+I looked for implementing a proper branch and bound using a proper solving algorithm for the related LP.
+It makes the bounding process different: instead of bounding variables (domain search), relaxing the constraints provide a lower bound on the cost (`cost(ICP) >= cost(relaxed LP)`), which makes it much easier to prune branches.
+Next branches are explored adding half-space constraints on x (flooring and ceiling around the previous non-int solution).  
+I took the simplex implementation from [there](https://www.reddit.com/r/adventofcode/comments/1pity70/comment/nt988z4) (too lazy to make mine and not interested tbh).
