@@ -11,10 +11,10 @@ def dp_min_xor(target, operands):
 
 
 def parse_machine(line):
-    ssplit = line.split()
-    target = int(ssplit[0][1:-1].replace('.', '0').replace('#', '1'), 2)
-    buttons_tuples = [tuple(map(int, t[1:-1].split(','))) for t in ssplit[1:-1]]
-    buttons = [int(''.join(['1' if b in t else '0' for b in range(len(ssplit[0]) - 2)]), 2) for t in buttons_tuples]
+    t_str, *b_str, _ = line.split()
+    target = int(t_str[-2:0:-1].replace('.', '0').replace('#', '1'), 2)
+    buttons = list(map(lambda x: sum(1<<i for i in x), map(lambda x: eval(x[:-1]+',)'), b_str)))
+    
     return target, buttons
 
 

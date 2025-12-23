@@ -1,3 +1,7 @@
+from functools import lru_cache
+from math import inf
+
+
 def bnb_min_sum(A: list[list[int]], b: list[int]) -> int:
     """
     branch-and-bound algorithm
@@ -6,8 +10,8 @@ def bnb_min_sum(A: list[list[int]], b: list[int]) -> int:
         subject to A x = b
         x in N
     with
-    A: List of Lists (m x n) with 0/1 entries (works for nonnegative too)
-    b: List length m, nonnegative ints
+    A: list of lists (m x n) with 0/1 entries
+    b: list length m, nonnegative ints
     returns optimal cost (inf in infeasible)
     """
     m, n = len(A), len(A[0])
@@ -19,74 +23,71 @@ def bnb_min_sum(A: list[list[int]], b: list[int]) -> int:
     row_cols = [[j for j, v in enumerate(row) if v] for row in A]
     # max_possible [0 for ]
 
-    optimal_cost = float("inf")
-    unassigned = [True] * n
-
-    def dfs(residual: list[int], cost: int, left: int) -> None:
-        nonlocal optimal_cost
-
+    @lru_cache(maxsize=None)
+    def branch_dfs(residual: tuple[int, ...], mask: int) -> int:
         ## if leaf node, update optimal cost iff the solution is valid (residual = 0)
-        if not left:
-            if all(r == 0 for r in residual):
-                optimal_cost = min(optimal_cost, cost)
-            return
+        if mask == 0:
+            return 0 if all(r == 0 for r in residual) else inf
 
         ## in the same for-loop:
         ## cpt upper bounds for unassigned vars
         ## pick unassigned variable with smallest ub, tie-break by most constraints
-        ub = [0] * n
-        j = None
-        best_key = None
-        for k in range(n):
-            if not unassigned[k]:
+        ub = {}
+        best_j = None
+        best_key = (inf, inf)
+        for j in range(n):
+            if not (mask & (1 << j)):
                 continue
             ## upper bound
-            if col_rows[k]:
-                ub[k] = min(residual[i] for i in col_rows[k])
+            ub[j] = min(residual[i] for i in col_rows[j]) if col_rows[j] else 0
             ## best next variable
-            key = (ub[k], -nb_const[k])
-            if best_key is None or key < best_key:
+            key = (ub[j], -nb_const[j])
+            if key < best_key:
                 best_key = key
-                j = k
+                best_j = j
                 
         ## row feasibility: residual[i] must be reachable using unassigned variables
         for i in range(m):
-            if residual[i] > sum(ub[k] for k in row_cols[i] if unassigned[k]):
-                return
+            max_possible = 0
+            for k in row_cols[i]:
+                if mask & (1 << k):
+                    max_possible += ub.get(k, 0)
+            if residual[i] > max_possible:
+                return inf
 
         ## explore branch
-        unassigned[j] = False
-        for val in range(0, ub[j] + 1):
+        best = inf
+        new_mask = mask & ~(1 << best_j)
+        # for val in reversed(range(0, ub[j] + 1)):
+        for val in range(ub[best_j] + 1):
             ## skip node if worst than current best
-            if cost + val >= optimal_cost:
+            if val >= best:
                 break
-
-            new_res = residual[:]  # copy prevents branches interfering with each other
-            for i in col_rows[j]:
+            new_res = list(residual)  # copy prevents branches interfering with each other
+            for i in col_rows[best_j]:
                 if (r := new_res[i] - val) < 0:
                     break
                 new_res[i] = r
             else:
-                dfs(new_res, cost + val, left - 1)
-        unassigned[j] = True
+                sub = branch_dfs(tuple(new_res), new_mask)
+                best = min(best, val + sub)
+                continue
+            break
+        return best
 
-    dfs(b[:], 0, n)
-    return optimal_cost
+    return branch_dfs(b, (1 << n) - 1)
+
+
+def parse_machine(line):
+    _, *b_str, j_str = line.split()
+    buttons = [tuple(map(int, t[1:-1].split(','))) for t in b_str]
+    b = tuple(map(int, j_str[1:-1].split(',')))
+    A = list(zip(*[[1 if i in btn else 0 for i in range(len(b))] for btn in buttons]))
+    return A, b
 
 
 def main(data):
-    sum = 0
-    for i, line in enumerate(data):
-        ssplit = line.split()
-        buttons = [tuple(map(int, t[1:-1].split(','))) for t in ssplit[1:-1]]
-        b = list(map(int, ssplit[-1][1:-1].split(',')))
-        A = list(zip(*[[1 if i in btn else 0 for i in range(len(b))] for btn in buttons]))
-        print(i)
-        print(A)
-        print(b)
-        print()
-        sum += bnb_min_sum(A, b)
-    return sum
+    return sum([bnb_min_sum(*parse_machine(line)) for line in data])
 
 
 if __name__ == '__main__':

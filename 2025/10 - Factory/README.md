@@ -18,7 +18,7 @@ where basically `x_i` are selection booleans that describe is the button is pres
 
 This is solved efficiently with DP (since the number of bits for the integers is low), where the cost is the number of button pressed and transitions are take/not-take.
 
-The parsing of the string into target and operands is ugly, tho.
+To have a clean parsing, I reversed the order of the bitmask (`0` is LSB): `[##..]` reads `0011`, and `(1,3)` reads `1010`.
 
 ## Part 2
 
