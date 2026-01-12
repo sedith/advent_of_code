@@ -1,15 +1,9 @@
 def main(data):
     blank_line = data.index('')
-    fresh_ids = [range(a, b+1) for a,b in map(lambda r: map(int, r.split('-')), data[:blank_line])]
+    ranges = [range(a, b+1) for a,b in map(lambda r: map(int, r.split('-')), data[:blank_line])]
     ingredients = map(int, data[blank_line + 1:])
 
-    count_valid = 0
-    for i in ingredients:
-        for r in fresh_ids:
-            if i in r:
-                count_valid += 1
-                break
-    return count_valid
+    return sum(any(i in r for r in ranges) for i in ingredients)
 
 
 if __name__ == '__main__':

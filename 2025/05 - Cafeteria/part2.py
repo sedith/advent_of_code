@@ -1,17 +1,15 @@
 def main(data):
     blank_line = data.index('')
-    fresh_ids = sorted([range(a, b+1) for a,b in map(lambda r: map(int, r.split('-')), data[:blank_line])], key=lambda r: r.start)
+    ranges = sorted([range(a, b+1) for a,b in map(lambda r: map(int, r.split('-')), data[:blank_line])], key=lambda r: r.start)
 
-    parsed_ranges = []
-    for r1 in fresh_ids:
-        merged = False
-        for ir2, r2 in enumerate(parsed_ranges):
-            if r1.start in r2 or r1.stop in r2:
-                parsed_ranges[ir2] = range(r2.start, max(r1.stop, r2.stop))
-                merge = True
+    parsed_ranges = [ranges[0]]
+    for r in ranges[1:]:
+        for i, r_parsed in enumerate(parsed_ranges):
+            if r.start in r_parsed or r.stop in r_parsed:
+                parsed_ranges[i] = range(r_parsed.start, max(r.stop, r_parsed.stop))
                 break
-        if not merged:
-            parsed_ranges.append(r1)
+        else:
+            parsed_ranges.append(r)
     return sum(len(r) for r in parsed_ranges)
 
 
