@@ -4,10 +4,8 @@ def main(data):
 
     parsed_ranges = [ranges[0]]
     for r in ranges[1:]:
-        for i, r_parsed in enumerate(parsed_ranges):
-            if r.start in r_parsed or r.stop in r_parsed:
-                parsed_ranges[i] = range(r_parsed.start, max(r.stop, r_parsed.stop))
-                break
+        if r.start <= parsed_ranges[-1].stop:
+            parsed_ranges[-1] = range(parsed_ranges[-1].start, max(r.stop, parsed_ranges[-1].stop))
         else:
             parsed_ranges.append(r)
     return sum(len(r) for r in parsed_ranges)
